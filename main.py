@@ -41,7 +41,7 @@ def loadAddressData(addressData):
         for row in reader:
             addressData.append(row)
 
-
+# Distance method for addresses
 def distanceBetween(streetAddress1, streetAddress2):
     index1 = None
     index2 = None
