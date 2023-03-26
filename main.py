@@ -4,20 +4,25 @@ import csv
 from HashTable import ChainingHashTable
 
 
-def distanceBetween(streetAddress1, streetAddress2):
+def distanceBetween(streetAddress1, streetAddress2):  # Method to measure distance between two addresses
+    # Initialize indexes for iterating through distance table
     index1 = None
     index2 = None
+    # Iterate through addresses to find the indexes of address 1 and 2
     for address in address_data:
         if streetAddress1 == address[2]:
             index1 = address_data.index(address)
         if streetAddress2 == address[2]:
             index2 = address_data.index(address)
+    # If either of the addresses are not in the address file, return error message
     if index1 is None or index2 is None:
         print("One or both of the addresses not found in addressData.")
+    # Use address indexes to search the distance array
     if index1 > index2:
         distance = distance_data[index1][index2]
     else:
         distance = distance_data[index2][index1]
+    # Return the distance as a float
     return float(distance)
 
 
@@ -46,42 +51,49 @@ def load_packages(fileName):  # Method to load packages into Hash Table
             myHash.insert(package_id, p)
 
 
-def loadDistanceData(distanceData):
+def loadDistanceData(distanceData):  # Reads distance data from CSV
     with open('distanceCSV.csv', newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             distanceData.append(row)
 
 
-def loadAddressData(addressData):
+def loadAddressData(addressData):  # Reads address data from CSV
     with open('addressCSV.csv', newline='') as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             addressData.append(row)
 
 
+# Determines which package a truck is carrying needs to be delivered to the nearest location
 def minDistanceFrom(truck):
     current_address = truck.current_location
     min_distance = float('inf')
     next_location = None
+    # Iterate through packages to determine which package is being delivered to the nearest address
     for package in truck.packages:
         if distanceBetween(current_address, package.delivery_address) < min_distance:
             min_distance = distanceBetween(current_address, package.delivery_address)
             next_location = package.delivery_address
+    # Returns string of next address location
     return next_location
 
 
-def truckDeliverPackages(truck):
+def truckDeliverPackages(truck):  # Method to deliver packages and measure truck mileage
     while len(truck.packages) > 0:
+        # Update truck mileage based on current location and next location
         truck.mileage += distanceBetween(truck.current_location, minDistanceFrom(truck))
+        # Update current location to the nearest address where a package is to be delivered
         truck.current_location = minDistanceFrom(truck)
+        # Iterate through packages and if the package is being delivered at current
+        # location, remove it from the truck and update delivery time and status
         for package in truck.packages:
             if package.delivery_address == truck.current_location:
                 package.delivery_status = "Delivered"
                 package.delivery_time = "Current Time"  # FIX ME
                 print(package)
                 truck.remove_package(package)
-
+    # If truck is empty it returns to the hub
     truck.mileage += distanceBetween(truck.current_location, "4001 South 700 East")
     truck.current_location = "4001 South 700 East"
     print(truck)
@@ -98,7 +110,9 @@ distance_data = []
 # Load distances into distance_data array
 loadDistanceData(distance_data)
 
+# Create address_data list to hold addresses
 address_data = []
+# Load addresses into address_data array
 loadAddressData(address_data)
 
 truck1 = Truck(16, 18, [], 0, "4001 South 700 East", "8:00 AM", "8:00")
