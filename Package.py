@@ -1,6 +1,7 @@
 class Package:
     # Package constructor
-    def __init__(self, package_id, delivery_address, delivery_city, delivery_state, delivery_zip, delivery_deadline, delivery_time, package_weight,
+    def __init__(self, package_id, delivery_address, delivery_city, delivery_state, delivery_zip, delivery_deadline,
+                 delivery_time, package_weight,
                  delivery_status):
         self.delivery_state = delivery_state
         self.package_id = package_id
@@ -15,5 +16,6 @@ class Package:
     # Package string constructor
     def __str__(self):
         return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.delivery_address, self.delivery_city,
-                                                   self.delivery_state, self.delivery_zip,
-                                                       self.delivery_deadline, self.package_weight, self.delivery_time, self.delivery_status)
+                                                       self.delivery_state, self.delivery_zip,
+                                                       self.delivery_deadline, self.package_weight, self.delivery_time,
+                                                       self.delivery_status)
