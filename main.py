@@ -73,4 +73,9 @@ loadDistanceData(distance_data)
 address_data = []
 loadAddressData(address_data)
 
-print(myHash.search(1).delivery_address)
+truck1 = Truck(16, 18, [], 0, "4001 South 700 East", "8:00 AM", "8:00")
+truck2 = Truck(16, 18, [], 0, "4001 South 700 East", "8:00 AM", "8:00")
+
+truck1.add_package(myHash.search(1))
+truck1.add_package(myHash.search(2))
+print(truck1)
