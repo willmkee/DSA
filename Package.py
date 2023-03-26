@@ -12,6 +12,6 @@ class Package:
         self.delivery_time = delivery_time
 
     def __str__(self):
-        return "%s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.delivery_address, self.delivery_city,
+        return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.delivery_address, self.delivery_city,
                                                    self.delivery_state, self.delivery_zip,
-                                                       self.delivery_deadline, self.package_weight, self.delivery_status)
+                                                       self.delivery_deadline, self.package_weight, self.delivery_time, self.delivery_status)

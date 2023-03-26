@@ -78,7 +78,7 @@ def truckDeliverPackages(truck):
         for package in truck.packages:
             if package.delivery_address == truck.current_location:
                 package.delivery_status = "Delivered"
-                package.delivery_deadline = "Current Time"  # FIX ME
+                package.delivery_time = "Current Time"  # FIX ME
                 print(package)
                 truck.remove_package(package)
 
