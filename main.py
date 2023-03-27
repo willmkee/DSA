@@ -52,16 +52,31 @@ def load_packages(fileName):  # Method to load packages into Hash Table
 
             # Inserts package into hash table
             myHash.insert(package_id, p)
-            
-            if package_id in [13, 14, 15, 16, 19, 20 ]:
+
+            if package_id in [13, 14, 15, 16, 19, 20]:
                 truck1.add_package(p)
                 continue
-            if package_id in [3, 18, 36, 38]:
-                truck2.add_package(p)
-                continue#13, #14, #15. #16, #19, and #20 
-            if "truck 2" or "9:05" in special_notes:
+            if "truck 2" in special_notes:
                 truck2.add_package(p)
                 continue
+            if "9:05" in special_notes:
+                truck2.add_package(p)
+                continue
+            if package_id == 9:
+                truck3.add_package(p)
+                continue
+            if package_id in [1, 29, 30, 31, 34, 37, 40]:
+                truck1.add_package(p)
+                continue
+            if "EOD" in package_deadline and len(truck3.packages) < 16:
+                truck3.add_package(p)
+                continue
+            if "EOD" in package_deadline and len(truck2.packages) < 16:
+                truck2.add_package(p)
+                continue
+            raise Exception("Package not loaded: % s" % p.package_id)
+
+
 
 
 
@@ -100,7 +115,7 @@ def truckDeliverPackages(truck):  # Method to deliver packages and measure truck
         truck.mileage += distance
         # Update current location to the nearest address where a package is to be delivered
         truck.current_location = minDistanceFrom(truck)
-        truck.current_time += timedelta(hours= distance / 18)
+        truck.current_time += timedelta(hours=distance / 18)
         # Iterate through packages and if the package is being delivered at current
         # location, remove it from the truck and update delivery time and status
         for package in truck.packages:
@@ -119,9 +134,9 @@ def truckDeliverPackages(truck):  # Method to deliver packages and measure truck
 # Creates Hash Table
 myHash = ChainingHashTable()
 
-truck1 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours = 8), "8:00")
-truck2 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours = 9, minutes = 5))
-truck3 = # add stuff
+truck1 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=8), timedelta(hours=8))
+truck2 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=9, minutes=5), timedelta(hours=9, minutes=5))
+truck3 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=9, minutes=45), timedelta(hours=9, minutes=45))
 
 # Loads packages into hash table from packageCSV.csv
 load_packages('packageCSV.csv')
@@ -136,9 +151,6 @@ address_data = []
 # Load addresses into address_data array
 loadAddressData(address_data)
 
-
-
-
 truckDeliverPackages(truck1)
-if truck1.current_time < truck2.current_time:
-    truck3.depart_time = truck3.current_time = truck1.current_time
+truckDeliverPackages(truck2)
+truckDeliverPackages(truck3)

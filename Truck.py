@@ -25,4 +25,5 @@ class Truck:
     def __str__(self):
         return f"Capacity: {self.capacity} \nMileage: {self.mileage:.2f} miles\n" \
                f"Current Location: {self.current_location}\nDeparture Time: {self.depart_time}\n" \
-               f"Packages: {[package.package_id for package in self.packages]}"
+               f"Packages: {[package.package_id for package in self.packages]}\n" \
+               f"Current Time: {self.current_time}"

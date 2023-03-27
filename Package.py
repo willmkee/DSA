@@ -16,7 +16,7 @@ class Package:
 
     # Package string constructor
     def __str__(self):
-        return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (self.package_id, self.delivery_address, self.delivery_city,
+        return "ID: %s, Address: %s %s, %s %s, Deadline: %s, Weight: %s, Delivered at: %s, Status: %s" % (self.package_id, self.delivery_address, self.delivery_city,
                                                        self.delivery_state, self.delivery_zip,
                                                        self.delivery_deadline, self.package_weight, self.delivery_time,
                                                        self.delivery_status)
