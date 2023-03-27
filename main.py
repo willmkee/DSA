@@ -157,7 +157,7 @@ print("2. Get a Single Package Status with a Time")
 print("3. Get All Package Status with a Time")
 print("4. Exit the program")
 print("Insert option number and press enter")
-selection = str(input("Option:"))
+selection = str(input("Option: "))
 
 if selection == "1":
     for i in range(1, 41):
@@ -165,6 +165,8 @@ if selection == "1":
         print(myHash.search(i))
     print("Total Truck Mileage: %s" % (truck1.mileage + truck2.mileage + truck3.mileage))
 elif selection == "2":
-    p = input("Which package? (insert package id)")
-    h, m = input("What time? (HH:MM)").split(":")
+    p_id = input("Which package? (insert package id) ")
+    h, m = input("What time? (HH:MM) ").split(":")
     input_time = timedelta(hours=int(h), minutes=int(m))
+    p = myHash.search(p_id)
+    p.update_status(input_time)

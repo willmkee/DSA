@@ -14,6 +14,14 @@ class Package:
         self.delivery_time = delivery_time
         self.departure_time = departure_time
 
+    def update_status(self, time):
+        if time < self.departure_time:
+            self.delivery_status = "At Hub"
+        elif time >= self.departure_time:
+            self.delivery_status = "En Route"
+        else:
+            self.delivery_status = "Delivered at %s" % self.delivery_time
+
     # Package string constructor
     def __str__(self):
         return "ID: %s, Address: %s %s, %s %s, Deadline: %s, Weight: %s, Status: %s" % (self.package_id, self.delivery_address, self.delivery_city,
