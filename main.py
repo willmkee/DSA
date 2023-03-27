@@ -77,9 +77,6 @@ def load_packages(fileName):  # Method to load packages into Hash Table
             raise Exception("Package not loaded: % s" % p.package_id)
 
 
-
-
-
 def loadDistanceData(distanceData):  # Reads distance data from CSV
     with open('distanceCSV.csv', newline='') as csvfile:
         reader = csv.reader(csvfile)
@@ -115,7 +112,7 @@ def truckDeliverPackages(truck):  # Method to deliver packages and measure truck
         truck.mileage += distance
         # Update current location to the nearest address where a package is to be delivered
         truck.current_location = minDistanceFrom(truck)
-        truck.current_time += timedelta(hours=distance / 18)
+        truck.current_time += timedelta(hours=distance / truck.speed)
         # Iterate through packages and if the package is being delivered at current
         # location, remove it from the truck and update delivery time and status
         for package in truck.packages:
@@ -123,12 +120,11 @@ def truckDeliverPackages(truck):  # Method to deliver packages and measure truck
                 package.delivery_status = "Delivered"
                 package.delivery_time = truck.current_time
                 package.departure_time = truck.depart_time
-                print(package)
                 truck.remove_package(package)
     # If truck is empty it returns to the hub
     truck.mileage += distanceBetween(truck.current_location, "4001 South 700 East")
     truck.current_location = "4001 South 700 East"
-    print(truck)
+    truck.current_time += timedelta(hours=distance / truck.speed)
 
 
 # Creates Hash Table
@@ -136,7 +132,7 @@ myHash = ChainingHashTable()
 
 truck1 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=8), timedelta(hours=8))
 truck2 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=9, minutes=5), timedelta(hours=9, minutes=5))
-truck3 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=9, minutes=45), timedelta(hours=9, minutes=45))
+truck3 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=10, minutes=1), timedelta(hours=10, minutes=1))
 
 # Loads packages into hash table from packageCSV.csv
 load_packages('packageCSV.csv')
@@ -154,3 +150,21 @@ loadAddressData(address_data)
 truckDeliverPackages(truck1)
 truckDeliverPackages(truck2)
 truckDeliverPackages(truck3)
+
+# Main Command Line Interface
+print("1. Print All Package Status and Total Mileage")
+print("2. Get a Single Package Status with a Time")
+print("3. Get All Package Status with a Time")
+print("4. Exit the program")
+print("Insert option number and press enter")
+selection = str(input("Option:"))
+
+if selection == "1":
+    for i in range(1, 41):
+        myHash.search(i).delivery_status = "Delivered at %s" % myHash.search(i).delivery_time
+        print(myHash.search(i))
+    print("Total Truck Mileage: %s" % (truck1.mileage + truck2.mileage + truck3.mileage))
+elif selection == "2":
+    p = input("Which package? (insert package id)")
+    h, m = input("What time? (HH:MM)").split(":")
+    input_time = timedelta(hours=int(h), minutes=int(m))
