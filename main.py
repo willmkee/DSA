@@ -2,6 +2,7 @@ from Package import Package
 from Truck import Truck
 import csv
 from HashTable import ChainingHashTable
+from datetime import timedelta
 
 
 def distanceBetween(streetAddress1, streetAddress2):  # Method to measure distance between two addresses
@@ -42,13 +43,26 @@ def load_packages(fileName):  # Method to load packages into Hash Table
             package_weight = row[6]
             delivery_time = None
             package_status = "At Hub"
+            departure_time = None
+            special_notes = row[7]
 
             # Creates new package object
             p = Package(package_id, package_address, package_city, package_state,
-                        package_zip, package_deadline, delivery_time, package_weight, package_status)
+                        package_zip, package_deadline, delivery_time, package_weight, package_status, departure_time)
 
             # Inserts package into hash table
             myHash.insert(package_id, p)
+            
+            if package_id in [13, 14, 15, 16, 19, 20 ]:
+                truck1.add_package(p)
+                continue
+            if package_id in [3, 18, 36, 38]:
+                truck2.add_package(p)
+                continue#13, #14, #15. #16, #19, and #20 
+            if "truck 2" or "9:05" in special_notes:
+                truck2.add_package(p)
+                continue
+
 
 
 def loadDistanceData(distanceData):  # Reads distance data from CSV
@@ -82,15 +96,18 @@ def minDistanceFrom(truck):
 def truckDeliverPackages(truck):  # Method to deliver packages and measure truck mileage
     while len(truck.packages) > 0:
         # Update truck mileage based on current location and next location
-        truck.mileage += distanceBetween(truck.current_location, minDistanceFrom(truck))
+        distance = distanceBetween(truck.current_location, minDistanceFrom(truck))
+        truck.mileage += distance
         # Update current location to the nearest address where a package is to be delivered
         truck.current_location = minDistanceFrom(truck)
+        truck.current_time += timedelta(hours= distance / 18)
         # Iterate through packages and if the package is being delivered at current
         # location, remove it from the truck and update delivery time and status
         for package in truck.packages:
             if package.delivery_address == truck.current_location:
                 package.delivery_status = "Delivered"
-                package.delivery_time = "Current Time"  # FIX ME
+                package.delivery_time = truck.current_time
+                package.departure_time = truck.depart_time
                 print(package)
                 truck.remove_package(package)
     # If truck is empty it returns to the hub
@@ -101,6 +118,10 @@ def truckDeliverPackages(truck):  # Method to deliver packages and measure truck
 
 # Creates Hash Table
 myHash = ChainingHashTable()
+
+truck1 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours = 8), "8:00")
+truck2 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours = 9, minutes = 5))
+truck3 = # add stuff
 
 # Loads packages into hash table from packageCSV.csv
 load_packages('packageCSV.csv')
@@ -115,10 +136,9 @@ address_data = []
 # Load addresses into address_data array
 loadAddressData(address_data)
 
-truck1 = Truck(16, 18, [], 0, "4001 South 700 East", "8:00 AM", "8:00")
-truck2 = Truck(16, 18, [], 0, "4001 South 700 East", "8:00 AM", "8:00")
 
-for i in range(1, 17):
-    truck1.add_package(myHash.search(i))
+
 
 truckDeliverPackages(truck1)
+if truck1.current_time < truck2.current_time:
+    truck3.depart_time = truck3.current_time = truck1.current_time

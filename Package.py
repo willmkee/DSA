@@ -2,7 +2,7 @@ class Package:
     # Package constructor
     def __init__(self, package_id, delivery_address, delivery_city, delivery_state, delivery_zip, delivery_deadline,
                  delivery_time, package_weight,
-                 delivery_status):
+                 delivery_status, departure_time):
         self.delivery_state = delivery_state
         self.package_id = package_id
         self.delivery_address = delivery_address
@@ -12,6 +12,7 @@ class Package:
         self.package_weight = package_weight
         self.delivery_status = delivery_status
         self.delivery_time = delivery_time
+        self.departure_time = departure_time
 
     # Package string constructor
     def __str__(self):

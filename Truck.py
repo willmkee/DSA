@@ -7,7 +7,7 @@ class Truck:
         self.mileage = mileage
         self.current_location = current_location
         self.depart_time = depart_time
-        self.current_time = current_time
+        self.current_time = depart_time
 
     # Add package to truck
     def add_package(self, package):
