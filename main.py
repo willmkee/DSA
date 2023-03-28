@@ -1,3 +1,5 @@
+import datetime
+
 from Package import Package
 from Truck import Truck
 import csv
@@ -159,14 +161,47 @@ print("4. Exit the program")
 print("Insert option number and press enter")
 selection = str(input("Option: "))
 
-if selection == "1":
-    for i in range(1, 41):
-        myHash.search(i).delivery_status = "Delivered at %s" % myHash.search(i).delivery_time
-        print(myHash.search(i))
-    print("Total Truck Mileage: %s" % (truck1.mileage + truck2.mileage + truck3.mileage))
-elif selection == "2":
-    p_id = input("Which package? (insert package id) ")
-    h, m = input("What time? (HH:MM) ").split(":")
-    input_time = timedelta(hours=int(h), minutes=int(m))
-    p = myHash.search(p_id)
-    p.update_status(input_time)
+while selection != "4":
+    if selection == "1":
+        for i in range(1, 41):
+            myHash.lookup(i).delivery_status = "Delivered at %s" % myHash.lookup(i).delivery_time
+            print(myHash.lookup(i))
+        print("\nTotal Truck Mileage: %s" % (truck1.mileage + truck2.mileage + truck3.mileage))
+        print(" \n\n1. Print All Package Status and Total Mileage")
+        print("2. Get a Single Package Status with a Time")
+        print("3. Get All Package Status with a Time")
+        print("4. Exit the program")
+        print("Insert option number and press enter")
+        selection = str(input("Option: "))
+    elif selection == "2":
+        p_id = int(input("Which package? (insert package id) "))
+        h, m = input("What time? (HH:MM) ").split(":")
+        selected_package = myHash.lookup(p_id)
+        input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+        selected_package.update_status(input_time)
+        print(selected_package)
+        print(" \n\n1. Print All Package Status and Total Mileage")
+        print("2. Get a Single Package Status with a Time")
+        print("3. Get All Package Status with a Time")
+        print("4. Exit the program")
+        print("Insert option number and press enter")
+        selection = str(input("Option: "))
+    elif selection == "3":
+        h, m = input("What time? (HH:MM) ").split(":")
+        input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+        for i in range(1, 41):
+            myHash.lookup(i).update_status(input_time)
+            print(myHash.lookup(i))
+        print(" \n\n1. Print All Package Status and Total Mileage")
+        print("2. Get a Single Package Status with a Time")
+        print("3. Get All Package Status with a Time")
+        print("4. Exit the program")
+        print("Insert option number and press enter")
+        selection = str(input("Option: "))
+    elif selection == "4":
+        print("Exiting application")
+        exit()
+    else:
+        print("Invalid entry")
+        selection = str(input("Try again: "))
+

@@ -17,7 +17,7 @@ class Package:
     def update_status(self, time):
         if time < self.departure_time:
             self.delivery_status = "At Hub"
-        elif time >= self.departure_time:
+        elif self.departure_time <= time < self.delivery_time:
             self.delivery_status = "En Route"
         else:
             self.delivery_status = "Delivered at %s" % self.delivery_time

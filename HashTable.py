@@ -35,7 +35,7 @@ class ChainingHashTable:
     # Searches for an item with matching key in the hash table.
     # Returns the item if found, or None if not found.
 
-    def search(self, key):
+    def lookup(self, key):
         # get the bucket list where this key would be.
         bucket = hash(key) % len(self.table)
         bucket_list = self.table[bucket]
