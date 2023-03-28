@@ -55,27 +55,29 @@ def load_packages(fileName):  # Method to load packages into Hash Table
             # Inserts package into hash table
             myHash.insert(package_id, p)
 
-            if package_id in [13, 14, 15, 16, 19, 20]:
+            if package_id in [13, 14, 15, 16, 19, 20]:  # These packages need to be on the same truck
                 truck1.add_package(p)
                 continue
-            if "truck 2" in special_notes:
+            if "truck 2" in special_notes:  # These packages are required to be on truck 2
                 truck2.add_package(p)
                 continue
-            if "9:05" in special_notes:
+            if "9:05" in special_notes:  # These packages go on truck 2 because it departs at 9:05
                 truck2.add_package(p)
                 continue
-            if package_id == 9:
+            if package_id == 9:  # Add to truck 3 so it arrives after 10:20
                 truck3.add_package(p)
                 continue
-            if package_id in [1, 29, 30, 31, 34, 37, 40]:
+            if package_id in [1, 29, 30, 31, 34, 37, 40]:  # These packages need to delivered before 10:30
                 truck1.add_package(p)
                 continue
+            # The rest of the packages go on truck 3 and truck 2 depending on capacity
             if "EOD" in package_deadline and len(truck3.packages) < 16:
                 truck3.add_package(p)
                 continue
             if "EOD" in package_deadline and len(truck2.packages) < 16:
                 truck2.add_package(p)
                 continue
+            # Trigger exception if a package is not loaded
             raise Exception("Package not loaded: % s" % p.package_id)
 
 
@@ -132,11 +134,12 @@ def truckDeliverPackages(truck):  # Method to deliver packages and measure truck
 # Creates Hash Table
 myHash = ChainingHashTable()
 
+# Create trucks
 truck1 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=8), timedelta(hours=8))
 truck2 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=9, minutes=5), timedelta(hours=9, minutes=5))
 truck3 = Truck(16, 18, [], 0, "4001 South 700 East", timedelta(hours=10, minutes=1), timedelta(hours=10, minutes=1))
 
-# Loads packages into hash table from packageCSV.csv
+# Loads packages into hash table and trucks from packageCSV.csv
 load_packages('packageCSV.csv')
 
 # Create distance_data list to hold distances
@@ -149,6 +152,7 @@ address_data = []
 # Load addresses into address_data array
 loadAddressData(address_data)
 
+# Deliver the packages
 truckDeliverPackages(truck1)
 truckDeliverPackages(truck2)
 truckDeliverPackages(truck3)
@@ -162,46 +166,55 @@ print("Insert option number and press enter")
 selection = str(input("Option: "))
 
 while selection != "4":
-    if selection == "1":
+    if selection == "1": # Display all package delivery times and total truck mileage
+        # Iterate through packages and update status with delivery time
         for i in range(1, 41):
             myHash.lookup(i).delivery_status = "Delivered at %s" % myHash.lookup(i).delivery_time
             print(myHash.lookup(i))
+        # Add up the mileage for each truck
         print("\nTotal Truck Mileage: %s" % (truck1.mileage + truck2.mileage + truck3.mileage))
+        # Return to main menu
         print(" \n\n1. Print All Package Status and Total Mileage")
         print("2. Get a Single Package Status with a Time")
         print("3. Get All Package Status with a Time")
         print("4. Exit the program")
         print("Insert option number and press enter")
         selection = str(input("Option: "))
-    elif selection == "2":
+    elif selection == "2":  # Display package info for a specific package at a specific time
+        # Gather package ID and time
         p_id = int(input("Which package? (insert package id) "))
         h, m = input("What time? (HH:MM) ").split(":")
         selected_package = myHash.lookup(p_id)
         input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+        # Update package status during specified time
         selected_package.update_status(input_time)
         print(selected_package)
+        # Return to main menu
         print(" \n\n1. Print All Package Status and Total Mileage")
         print("2. Get a Single Package Status with a Time")
         print("3. Get All Package Status with a Time")
         print("4. Exit the program")
         print("Insert option number and press enter")
         selection = str(input("Option: "))
-    elif selection == "3":
+    elif selection == "3":  # Display all packages at a specific time
+        # Gather time
         h, m = input("What time? (HH:MM) ").split(":")
         input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+        # Iterate through all packages and update status for specific time
         for i in range(1, 41):
             myHash.lookup(i).update_status(input_time)
             print(myHash.lookup(i))
+        # Return to main menu
         print(" \n\n1. Print All Package Status and Total Mileage")
         print("2. Get a Single Package Status with a Time")
         print("3. Get All Package Status with a Time")
         print("4. Exit the program")
         print("Insert option number and press enter")
         selection = str(input("Option: "))
-    elif selection == "4":
+    elif selection == "4":  # Exit application
         print("Exiting application")
         exit()
-    else:
+    else:  # If user puts anything other than 1-4 have user re-do input
         print("Invalid entry")
         selection = str(input("Try again: "))
 

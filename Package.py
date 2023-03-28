@@ -14,12 +14,14 @@ class Package:
         self.delivery_time = delivery_time
         self.departure_time = departure_time
 
+    # Update status based on time
     def update_status(self, time):
-        if time < self.departure_time:
+        if time < self.departure_time:  # If specified time is before departure time the package is at the hub
             self.delivery_status = "At Hub"
+        # If specified time is at or after departure time, and before delivery time the package is en route
         elif self.departure_time <= time < self.delivery_time:
             self.delivery_status = "En Route"
-        else:
+        else:  # Otherwise the package has been delivered
             self.delivery_status = "Delivered at %s" % self.delivery_time
 
     # Package string constructor
