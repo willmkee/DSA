@@ -183,12 +183,15 @@ while selection != "4":
     elif selection == "2":  # Display package info for a specific package at a specific time
         # Gather package ID and time
         p_id = int(input("Which package? (insert package id) "))
-        h, m = input("What time? (HH:MM) ").split(":")
-        selected_package = myHash.lookup(p_id)
-        input_time = datetime.timedelta(hours=int(h), minutes=int(m))
-        # Update package status during specified time
-        selected_package.update_status(input_time)
-        print(selected_package)
+        if 0 < p_id < 41:
+            h, m = input("What time? (HH:MM) ").split(":")
+            selected_package = myHash.lookup(p_id)
+            input_time = datetime.timedelta(hours=int(h), minutes=int(m))
+            # Update package status during specified time
+            selected_package.update_status(input_time)
+            print(selected_package)
+        else:
+            print("invalid package id.")
         # Return to main menu
         print(" \n\n1. Print All Package Status and Total Mileage")
         print("2. Get a Single Package Status with a Time")
